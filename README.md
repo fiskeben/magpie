@@ -8,6 +8,13 @@ Magpie uses the Docker event API to retrieve the container's environment variabl
 and stores them in a PostgreSQL database along with the service name, version, and the
 container's created timestamp.
 
+It uses a blacklist to filter out variables
+and a whitelist to include the variable in clear text.
+If a variable is not in either list it will be masked.
+
+A Docker container's variables are only saved if there aren't already
+a set of variables with the same service name, version, and timestamp.
+
 ## Configuration
 
 Use a configuration file to set database credentials and so.
