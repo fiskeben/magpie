@@ -106,8 +106,18 @@ func listToMap(env []string) map[string]string {
 
 	res := make(map[string]string)
 	for _, item := range env {
+		item = strings.TrimSpace(item)
+		if item == "" {
+			continue
+		}
+
 		parts := strings.Split(item, "=")
-		res[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
+		key := strings.TrimSpace(parts[0])
+		value := ""
+		if len(parts) > 1 {
+			value = strings.TrimSpace(parts[1])
+		}
+		res[key] = value
 	}
 	return res
 }
