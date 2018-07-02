@@ -77,6 +77,10 @@ func getList(db *sql.DB, sql string) ([]string, error) {
 	res := []string{}
 
 	for rows.Next() {
+		if err = rows.Err(); err != nil {
+			return nil, fmt.Errorf("failed to iterate result set: %v", err)
+		}
+
 		var item string
 		if err = rows.Scan(&item); err != nil {
 			return nil, fmt.Errorf("failed to read row: %v", err)
