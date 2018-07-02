@@ -10,15 +10,6 @@ import (
 	"github.com/docker/docker/client"
 )
 
-var globalBlacklist = []string{
-	"HOME",
-	"PATH",
-}
-
-var globalWhitelist = []string{
-	"NODE_VERSION",
-}
-
 // ContainerData holds information about a single container's configuration.
 type ContainerData struct {
 	name    string
@@ -27,19 +18,23 @@ type ContainerData struct {
 	created int64
 }
 
-type ContainerInquirer interface {
+// ContainerAccessor defines access to Docker containers.
+type ContainerAccessor interface {
 	ContainerList(ctx context.Context, options types.ContainerListOptions) ([]types.Container, error)
 	ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error)
 }
 
+// ContainerClient implements ContainerAccessor.
 type ContainerClient struct {
 	client *client.Client
 }
 
+// ContainerList lists currently running Docker containers.
 func (c *ContainerClient) ContainerList(ctx context.Context, options types.ContainerListOptions) ([]types.Container, error) {
 	return c.client.ContainerList(ctx, options)
 }
 
+// ContainerInspect returns information about a running container.
 func (c *ContainerClient) ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error) {
 	return c.client.ContainerInspect(ctx, containerID)
 }
@@ -47,7 +42,7 @@ func (c *ContainerClient) ContainerInspect(ctx context.Context, containerID stri
 // GetConfigurations reads configurations from all running containers
 // on the host. Configuration data will be filtered so that blacklisted
 // values are removed and non-whitelisted values are masked.
-func GetConfigurations(ctx context.Context, c ContainerInquirer, db *sql.DB) ([]ContainerData, error) {
+func GetConfigurations(ctx context.Context, c ContainerAccessor, db *sql.DB) ([]ContainerData, error) {
 
 	containers, err := c.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
