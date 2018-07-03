@@ -9,28 +9,12 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/events"
-	"github.com/docker/docker/client"
 )
 
 // EventsAccessor can interface with Docker.
 type EventsAccessor interface {
 	Events(ctx context.Context, options types.EventsOptions) (<-chan events.Message, <-chan error)
 	ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error)
-}
-
-// EventsClient is a wrapper around the Docker API client.
-type EventsClient struct {
-	client *client.Client
-}
-
-// Events wraps the events API.
-func (d *EventsClient) Events(ctx context.Context, options types.EventsOptions) (<-chan events.Message, <-chan error) {
-	return d.client.Events(ctx, options)
-}
-
-// ContainerInspect wraps the container inspect API.
-func (d *EventsClient) ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error) {
-	return d.client.ContainerInspect(ctx, containerID)
 }
 
 func listen(ctx context.Context, c EventsAccessor, db *sql.DB, signals chan bool) error {

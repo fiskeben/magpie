@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/client"
 )
 
 // ContainerData holds information about a single container's configuration.
@@ -22,21 +21,6 @@ type ContainerData struct {
 type ContainerAccessor interface {
 	ContainerList(ctx context.Context, options types.ContainerListOptions) ([]types.Container, error)
 	ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error)
-}
-
-// ContainerClient implements ContainerAccessor.
-type ContainerClient struct {
-	client *client.Client
-}
-
-// ContainerList lists currently running Docker containers.
-func (c *ContainerClient) ContainerList(ctx context.Context, options types.ContainerListOptions) ([]types.Container, error) {
-	return c.client.ContainerList(ctx, options)
-}
-
-// ContainerInspect returns information about a running container.
-func (c *ContainerClient) ContainerInspect(ctx context.Context, containerID string) (types.ContainerJSON, error) {
-	return c.client.ContainerInspect(ctx, containerID)
 }
 
 // GetConfigurations reads configurations from all running containers

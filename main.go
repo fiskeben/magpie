@@ -69,11 +69,8 @@ func main() {
 		logAndExit(err)
 	}
 
-	EventsClient := &EventsClient{client: c}
-	containerClient := &ContainerClient{client: c}
-
 	if *init {
-		data, err := GetConfigurations(ctx, containerClient, db)
+		data, err := GetConfigurations(ctx, c, db)
 		if err != nil {
 			logAndExit(err)
 		}
@@ -92,7 +89,7 @@ func main() {
 		done <- true
 	}()
 
-	listen(ctx, EventsClient, db, done)
+	listen(ctx, c, db, done)
 }
 
 func logAndExit(err error) {
