@@ -72,6 +72,8 @@ You can install it by running
 
 `go get -u github.com/jteeuwen/go-bindata/...`
 
+Then run `make migrate` to generate the binding file.
+
 [More information on `go-bindata`](https://github.com/golang-migrate/migrate/tree/master/source/go_bindata).
 
 Using the `Makefile` to build should suffice;
